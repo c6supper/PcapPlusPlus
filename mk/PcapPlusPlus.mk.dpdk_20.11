@@ -1,0 +1,20 @@
+### DPDK ###
+
+# Build using pkg-config variables if possible
+ifneq ($(shell pkg-config --exists libdpdk && echo 0),0)
+$(error "no installation of DPDK found")
+endif
+
+# includes
+PCAPPP_INCLUDES += $(shell pkg-config --cflags-only-I libdpdk)
+
+# libs dir
+PCAPPP_LIBS_DIR += $(shell pkg-config --libs-only-L libdpdk)
+
+#flags
+PCAPPP_BUILD_FLAGS += -msse -msse2 -msse3 -Wall $(shell pkg-config --cflags libdpdk)
+
+# libs
+PCAPPP_LIBS += $(shell pkg-config --libs-only-l libdpdk) $(shell pkg-config --libs-only-other libdpdk)
+
+

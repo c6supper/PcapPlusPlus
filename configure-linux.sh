@@ -272,6 +272,8 @@ fi
 function get_dpdk_version() {
    if [ -f $DPDK_HOME/pkg/dpdk.spec ]; then
       echo $(grep "Version" $DPDK_HOME/pkg/dpdk.spec | cut -d' ' -f2 | cut -d'.' -f 1,2);
+   elif [ -f $PKG_CONFIG_PATH/libdpdk.pc ]; then
+      echo $(grep "Version" $PKG_CONFIG_PATH/libdpdk.pc | cut -d' ' -f2 | cut -d'.' -f 1,2);
    else
       echo $(cat $DPDK_HOME/VERSION | cut -d'.' -f 1,2);
    fi
@@ -288,11 +290,16 @@ function compare_versions() {
 # if compiling with DPDK
 if (( $COMPILE_WITH_DPDK > 0 )) ; then
 
-   # add DPDK definitions to PcapPlusPlus.mk
-   cat mk/PcapPlusPlus.mk.dpdk >> $PCAPPLUSPLUS_MK
-
    # if DPDK ver >= 17.11 concat additional definitions to PcapPlusPlus.mk
    CUR_DPDK_VERSION=$(get_dpdk_version)
+   echo $CUR_DPDK_VERSION
+   if [ "$(compare_versions $CUR_DPDK_VERSION 20.11)" -eq "1" ] ; then
+      cat mk/PcapPlusPlus.mk.dpdk_20.11 >> $PCAPPLUSPLUS_MK
+   else
+      # add DPDK definitions to PcapPlusPlus.mk
+      cat mk/PcapPlusPlus.mk.dpdk >> $PCAPPLUSPLUS_MK
+   fi
+   
    if [ "$(compare_versions $CUR_DPDK_VERSION 17.11)" -eq "1" ] ; then
       cat mk/PcapPlusPlus.mk.dpdk_new >> $PCAPPLUSPLUS_MK
    fi

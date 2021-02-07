@@ -1,0 +1,3 @@
+1. mkdir ./install_pcappp
+2. ./configure-linux.sh --default --libpcap-include-dir /samba/public/svn/tx3xxs_platform/platforms/pcap_inst/usr/local/include --libpcap-lib-dir /samba/public/svn/tx3xxs_platform/platforms/pcap_inst/usr/local/lib --install-dir ./install_pcappp
+3. CC=arm-fsl-linux-gnueabi-gcc CXX=arm-fsl-linux-gnueabi-g++ LDFLAGS="-static -lrt -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -lc" PCAPPP_INCLUDES="-I/opt/gcc-4.4.4-glibc-2.11.1-multilib-1.0/arm-fsl-linux-gnueabi/arm-fsl-linux-gnueabi/multi-libs/usr/include/netinet" make -j8
